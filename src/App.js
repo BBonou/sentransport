@@ -13,6 +13,9 @@ function App() {
   // Selection state variable
   const [ligneSelectionnee, setLigneSelectionee] = useState(null);
 
+  // Research count
+  const [count, setCount] = useState(0);
+
   const lignes = [
     {
       id: 1,
@@ -131,11 +134,24 @@ function App() {
     <div className="App">
       <Header />
       <main className="contenu">
-        <Recherche valeur={recherche} onChange={setRecherche} />
+        <Recherche
+          valeur={recherche}
+          onChange={setRecherche}
+          count={count}
+          setCount={setCount}
+        />
 
         <p className="resultat-recherche">
           {lignesFiltrees.length} ligne{lignesFiltrees.length > 1 ? "s" : ""}{" "}
           trouvee{lignesFiltrees.length > 1 ? "s" : ""}
+        </p>
+
+        <p>
+          {count} recherche{count > 1 ? "s" : ""}
+        </p>
+
+        <p className="resultat-recherche">
+          {lignesFiltrees.length === 0 ? "Aucune ligne trouvee" : ""}
         </p>
 
         {lignesFiltrees.map((ligne) => (

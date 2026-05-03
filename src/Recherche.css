@@ -1,5 +1,6 @@
 .recherche {
     margin-bottom: 20px;
+    display: flex;
 }
 
 .recherche-input {
@@ -19,4 +20,19 @@
 
 .recherche-input::placeholder {
     color: #b2bec3;
+}
+
+.clear-button {
+    font-size: 1rem;
+
+    margin-left: 10px;
+
+    border-radius: 8px;
+    border: 2px solid #dcdde1;
+
+    outline: none;
+}
+
+.clear-button:hover {
+    border-color: #0a6e31;
 }
