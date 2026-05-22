@@ -16,7 +16,7 @@ function LigneBus({
       <div className="ligne-numero">{numero}</div>
       <div className="ligne-info">
         <span className="ligne-trajet">
-          {depart} &arr; {arrivee}
+          {depart} &rarr; {arrivee}
         </span>
         <span className="ligne-arrets">{arrets} arrets</span>
       </div>
