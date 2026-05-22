@@ -1,5 +1,5 @@
 import "./App.css";
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import Header from "./Header";
 import Footer from "./Footer";
 import Recherche from "./Recherche";
@@ -7,6 +7,15 @@ import LigneBus from "./LigneBus";
 import DetailsLigne from "./DetailLigne";
 
 function App() {
+  // 1. ----- Three states
+
+  // Data uploaded from Flask
+  const [lignes, setLignes] = useState([]);
+
+  const [loading, setLoading] = useState(true);
+
+  const [error, setError] = useState(null);
+
   // Research state variable
   const [recherche, setRecherche] = useState("");
 
@@ -16,102 +25,24 @@ function App() {
   // Research count
   const [count, setCount] = useState(0);
 
-  const lignes = [
-    {
-      id: 1,
-      numero: " 1 ",
-      depart: " Parcelles Assainies ",
-      arrivee: " Plateau ",
-      arrets: 14,
-      listeArrets: [
-        " Parcelles U14 ",
-        " Parcelles U10 ",
-        " Camberene ",
-        " Patte d'Oie ",
-        " Grand Dakar ",
-        " Colobane ",
-        " Ponty ",
-        " Plateau ",
-      ],
-    },
-    {
-      id: 2,
-      numero: " 7 ",
-      depart: " Guediawaye ",
-      arrivee: " Place Obe ",
-      arrets: 18,
-      listeArrets: [
-        " Guediawaye ",
-        " Pikine ",
-        " Thiaroye ",
-        " Keur Massar ",
-        " Grand Yoff ",
-        " Parcelles ",
-        " Liberte 6 ",
-        " Place Obe ",
-      ],
-    },
-    {
-      id: 3,
-      numero: " 15 ",
-      depart: " Pikine ",
-      arrivee: " Medina ",
-      arrets: 12,
-      listeArrets: [
-        " Pikine Centre ",
-        " Thiaroye Gare ",
-        " Hann ",
-        " Colobane ",
-        " Fass ",
-        " Medina ",
-      ],
-    },
-    {
-      id: 4,
-      numero: " 23 ",
-      depart: " Ouakam ",
-      arrivee: " Grand Dakar ",
-      arrets: 10,
-      listeArrets: [
-        " Ouakam Village ",
-        " Mermoz ",
-        " Fann ",
-        " Point E ",
-        " Liberte 5 ",
-        " Grand Dakar ",
-      ],
-    },
-    {
-      id: 5,
-      numero: " 8 ",
-      depart: " Almadies ",
-      arrivee: " Colobane ",
-      arrets: 16,
-      listeArrets: [
-        " Almadies ",
-        " Ngor ",
-        " Yoff ",
-        " Ouest Foire ",
-        " Liberte 6 ",
-        " Colobane ",
-      ],
-    },
-    {
-      id: 6,
-      numero: " 12 ",
-      depart: " Yoff ",
-      arrivee: " Sandaga ",
-      arrets: 11,
-      listeArrets: [
-        " Yoff Village ",
-        " Aeroport LSS ",
-        " Parcelles U17 ",
-        " Grand Yoff ",
-        " HLM ",
-        " Sandaga ",
-      ],
-    },
-  ];
+  // 2. ----- Load data at startup
+  useEffect(() => {
+    fetch("http://127.0.0.1:5000/lignes")
+      .then(response => {
+        if (!response.ok) {
+          throw new Error("Erreur serveur : " + response.status);
+        }
+        return response.json();
+      })
+      .then(data => {
+        setLignes(data);
+        setLoading(false);
+      })
+      .catch(error => {
+        setError(error.message);
+        setLoading(false);
+      });
+  }, []);
 
   // Filter the lines according to the typed text
   const lignesFiltrees = lignes.filter(
@@ -130,6 +61,37 @@ function App() {
     }
   }
 
+  // Loading screen
+  if (loading) {
+    return (
+        <div className="App">
+          <Header />
+          <main className="contenu">
+            <p className="message-chargement">
+              Chargement des lignes ...
+            </p>
+          </main>
+        </div>
+    );
+  }
+
+  // Error screen
+  if (error) {
+    return (
+        <div className="App">
+          <Header />
+          <main className="contenu">
+            <div className="message-erreur">
+              <p>Impossible de charger les lignes.</p>
+              <p className="erreur-detail">{error}</p>
+              <p>Verifiez que le serveur Flask est lance (python api/app.py).</p>
+            </div>
+          </main>
+        </div>
+    );
+  }
+
+  // Normal screen
   return (
     <div className="App">
       <Header />

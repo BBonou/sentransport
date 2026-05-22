@@ -36,7 +36,7 @@
   {
     "id": 3,
     "numero": "15",
-    "depart": "Pikinine",
+    "depart": "Pikine",
     "arrivee": "Medina",
     "arrets": 12,
     "listeArrets": [
