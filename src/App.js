@@ -1,5 +1,5 @@
 import "./App.css";
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import Header from "./Header";
 import Footer from "./Footer";
 import Recherche from "./Recherche";
@@ -28,17 +28,17 @@ function App() {
   // 2. ----- Load data at startup
   useEffect(() => {
     fetch("http://127.0.0.1:5000/lignes")
-      .then(response => {
+      .then((response) => {
         if (!response.ok) {
           throw new Error("Erreur serveur : " + response.status);
         }
         return response.json();
       })
-      .then(data => {
+      .then((data) => {
         setLignes(data);
         setLoading(false);
       })
-      .catch(error => {
+      .catch((error) => {
         setError(error.message);
         setLoading(false);
       });
@@ -52,42 +52,79 @@ function App() {
       l.numero.includes(recherche),
   );
 
-  // Clic management function
+  // Function that loads lines from Flask
+  function loadLines() {
+    setLoading(true);
+
+    fetch("http://127.0.0.1:5000/lignes")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Erreur serveur : " + response.status);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setLignes(data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        setError(error.message);
+        setLoading(false);
+      });
+  }
+
+  // Function called when a line is clicked
   function handleClickLigne(ligne) {
+    // if the line is already selected
+    // then we deselect it
     if (ligneSelectionnee && ligneSelectionnee.id === ligne.id) {
-      setLigneSelectionee(null); // re-click = unselect
-    } else {
-      setLigneSelectionee(ligne); // First click = select
+      setLigneSelectionee(null);
+    }
+
+    // else we load the details from Flask
+    else {
+      fetch(`http://127.0.0.1:5000/lignes/${ligne.id}`)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Erreur lors du chargement");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          // data contains the details returned by Flask
+          setLigneSelectionee(data);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     }
   }
 
   // Loading screen
   if (loading) {
     return (
-        <div className="App">
-          <Header />
-          <main className="contenu">
-            <p className="message-chargement">
-              Chargement des lignes ...
-            </p>
-          </main>
-        </div>
+      <div className="App">
+        <Header />
+        <main className="contenu">
+          <p className="message-chargement">Chargement des lignes ...</p>
+        </main>
+      </div>
     );
   }
 
   // Error screen
   if (error) {
     return (
-        <div className="App">
-          <Header />
-          <main className="contenu">
-            <div className="message-erreur">
-              <p>Impossible de charger les lignes.</p>
-              <p className="erreur-detail">{error}</p>
-              <p>Verifiez que le serveur Flask est lance (python api/app.py).</p>
-            </div>
-          </main>
-        </div>
+      <div className="App">
+        <Header />
+        <main className="contenu">
+          <div className="message-erreur">
+            <p>Impossible de charger les lignes.</p>
+            <p className="erreur-detail">{error}</p>
+            <p>Verifiez que le serveur Flask est lance (python api/app.py).</p>
+          </div>
+        </main>
+      </div>
     );
   }
 
@@ -102,6 +139,10 @@ function App() {
           count={count}
           setCount={setCount}
         />
+
+        <button className="reload-button" onClick={() => loadLines()}>
+          Recharger
+        </button>
 
         <p className="resultat-recherche">
           {lignesFiltrees.length} ligne{lignesFiltrees.length > 1 ? "s" : ""}{" "}

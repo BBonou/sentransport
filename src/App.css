@@ -15,6 +15,21 @@
     flex: 1;
 }
 
+.reload-button {
+    font-size: 1rem;
+
+    margin-left: 10px;
+
+    border-radius: 8px;
+    border: 2px solid #dcdde1;
+
+    outline: none;
+}
+
+.reload-button:hover {
+    border-color: #0a6e31;
+}
+
 @media (max-width: 600px) {
     .contenu {
         padding: 12px;

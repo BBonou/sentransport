@@ -92,5 +92,21 @@
       "HLM",
       "Sandaga"
     ]
+  },
+  {
+    "id": 11,
+    "numero": "44",
+    "depart": "Parcelles",
+    "arrivee": "Plateau",
+    "arrets": 18,
+    "listeArrets": ["Parcelles", "Grand Médine", "Colobane", "Plateau"]
+  },
+  {
+    "id": 12,
+    "numero": "55",
+    "depart": "Keur Massar",
+    "arrivee": "Liberté 6",
+    "arrets": 20,
+    "listeArrets": ["Keur Massar", "Thiaroye", "Patte d'Oie", "Liberté 6"]
   }
 ]
