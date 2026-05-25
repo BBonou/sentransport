@@ -54,7 +54,7 @@ function RecenterMap({position}) {
 function Carte() {
     const [arrets, setArrets] = useState([]);
     const [positionUtilisateur, setPositionUtilisateur] = useState(null);
-    const [arretProche, setArretProche] = useState(null);
+    const [arretsProches, setArretProches] = useState([]);
     const DAKAR = [14.6928, -17.4467];
 
     // Load stops from Flask
@@ -79,20 +79,22 @@ function Carte() {
         }
     }, []);
 
-    // Find the nearest stop
+    // Find the 3 nearest stops
     useEffect(() => {
         if (positionUtilisateur && arrets.length > 0) {
-            let proche = null;
-            let dMin = Infinity;
-            arrets.forEach(a => {
-                const d = calculateDistance(
+            const arretsAvecDistance = arrets.map(a => ({
+                ...a,
+                distance: calculateDistance(
                     positionUtilisateur[0],
                     positionUtilisateur[1],
                     a.lat, a.lon
-                );
-                if (d < dMin) { dMin = d; proche = {...a, distance: d}; }
-            });
-            setArretProche(proche);
+                ),
+            }));
+
+            const proches = arretsAvecDistance
+                .sort((a, b) => a.distance - b.distance)
+                .slice(0, 3);
+            setArretProches(proches);
         }
     }, [positionUtilisateur, arrets]);
 
@@ -100,12 +102,18 @@ function Carte() {
         <div className="carte-container">
             <h2 className="carte-titre">Carte des arrets</h2>
             {
-                arretProche && (
-                    <p className="arret-proche">
-                        Arret le plus proche :
-                        <strong> {arretProche.nom}</strong>
-                        {" "}({arretProche.distance.toFixed(1)} km)
-                    </p>
+                arretsProches.length > 0 && (
+                    <div className="arret-proche">
+                        <h3>3 arrets les plus procjes :</h3>
+                        <ul>
+                            {arretsProches.map((a, index) => (
+                                <li key={a.id}>
+                                    {index + 1}. <strong>{a.nom}</strong>
+                                    {" "}- {a.distance.toFixed(1)} km
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
                 )
             }
             <button className="btn-center" onClick={() => {const event = new CustomEvent("center-user-position"); window.dispatchEvent(event);}}>Centrer sur ma position</button>
@@ -116,7 +124,7 @@ function Carte() {
                 />
                 <RecenterMap position={positionUtilisateur} />
                 {arrets.map(a => (
-                    <Marker key={a.id} position={[a.lat, a.lon]} icon={arretProche && a.id === arretProche.id ? nearestIcon : new L.Icon.Default()}>
+                    <Marker key={a.id} position={[a.lat, a.lon]} icon={arretsProches.some(ap => ap.id == a.id) ? nearestIcon : new L.Icon.Default()}>
                         <Popup>
                             <strong>{a.nom}</strong><br />
                             Lignes : {a.lignes.join(", ")}
