@@ -5,6 +5,7 @@ import Footer from "./Footer";
 import Recherche from "./Recherche";
 import LigneBus from "./LigneBus";
 import DetailsLigne from "./DetailLigne";
+import Carte from "./Carte";
 
 function App() {
   // 1. ----- Three states
@@ -171,6 +172,7 @@ function App() {
           />
         ))}
         {ligneSelectionnee && <DetailsLigne ligne={ligneSelectionnee} />}
+          <Carte />
       </main>
       <Footer />
     </div>
