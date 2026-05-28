@@ -6,6 +6,8 @@ import Recherche from "./Recherche";
 import LigneBus from "./LigneBus";
 import DetailsLigne from "./DetailLigne";
 import Carte from "./Carte";
+import Meteo from "./Meteo";
+import SignalerIncident from "./SignalerIncident";
 
 function App() {
   // 1. ----- Three states
@@ -134,6 +136,7 @@ function App() {
     <div className="App">
       <Header />
       <main className="contenu">
+        <Meteo />
         <Recherche
           valeur={recherche}
           onChange={setRecherche}
@@ -172,7 +175,8 @@ function App() {
           />
         ))}
         {ligneSelectionnee && <DetailsLigne ligne={ligneSelectionnee} />}
-          <Carte />
+        <Carte />
+        <SignalerIncident />
       </main>
       <Footer />
     </div>

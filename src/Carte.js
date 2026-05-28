@@ -124,7 +124,7 @@ function Carte() {
                 />
                 <RecenterMap position={positionUtilisateur} />
                 {arrets.map(a => (
-                    <Marker key={a.id} position={[a.lat, a.lon]} icon={arretsProches.some(ap => ap.id == a.id) ? nearestIcon : new L.Icon.Default()}>
+                    <Marker key={a.id} position={[a.lat, a.lon]} icon={arretsProches.some(ap => ap.id === a.id) ? nearestIcon : new L.Icon.Default()}>
                         <Popup>
                             <strong>{a.nom}</strong><br />
                             Lignes : {a.lignes.join(", ")}
