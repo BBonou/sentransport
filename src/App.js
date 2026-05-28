@@ -8,6 +8,7 @@ import DetailsLigne from "./DetailLigne";
 import Carte from "./Carte";
 import Meteo from "./Meteo";
 import SignalerIncident from "./SignalerIncident";
+import ListeIncidents from "./ListeIncidents";
 
 function App() {
   // 1. ----- Three states
@@ -176,7 +177,8 @@ function App() {
         ))}
         {ligneSelectionnee && <DetailsLigne ligne={ligneSelectionnee} />}
         <Carte />
-        <SignalerIncident />
+        <SignalerIncident lignes={lignes} />
+        <ListeIncidents />
       </main>
       <Footer />
     </div>

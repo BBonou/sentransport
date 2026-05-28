@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./SignalerIncident.css";
 
-function SignalerIncident() {
+function SignalerIncident({ lignes }) {
     const [ligne, setLigne] = useState("");
     const [description, setDescription] = useState("");
     const [lieu, setLieu] = useState("");
@@ -58,13 +58,17 @@ function SignalerIncident() {
                 Signaler un incident
             </h2>
             <div className="signaler-form">
-                <input
-                    type="text"
-                    placeholder="Numero de ligne (ex: 15)"
+                <select // Exercise 3 Lab6
                     value={ligne}
                     onChange={e => setLigne(e.target.value)}
-                    className="signaler-input"
-                />
+                    className="signaler-input">
+                    <option value="">Choisir une ligne</option>
+                    {lignes.map(l => (
+                        <option key={l.id} value={l.numero}>
+                            Ligne {l.numero} : {l.depart} - {l.arrivee}
+                        </option>
+                    ))}
+                </select>
                 <input
                     type="text"
                     placeholder="Lieu (ex: Colobane)"
